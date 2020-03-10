@@ -1,5 +1,7 @@
 # Big table
 
+[Online demo](https://big-table.surge.sh/)
+
 ## Available Scripts
 
 In the project directory, you can run:
