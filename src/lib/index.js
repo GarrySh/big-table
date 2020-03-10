@@ -53,7 +53,7 @@ const generateUsers = (usersNum, departmentsNum) => {
     }));
 };
 
-export const generateData = (usersNum = 300, departmentsNum = 5) => ({
+export const generateData = (usersNum = 10000, departmentsNum = 5) => ({
   colors,
   departments: generateDepartments(departmentsNum),
   users: generateUsers(usersNum, departmentsNum),

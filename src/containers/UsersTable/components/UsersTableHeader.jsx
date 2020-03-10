@@ -1,16 +1,26 @@
 import React, { memo } from 'react';
-import { TableCell, TableHead, TableSortLabel, TableRow } from '@material-ui/core';
+import { TableSortLabel } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import UsersTableCell from './UsersTableCell';
 
-const UsersTableHeader = ({ columns, order, orderBy, onClick }) => {
+const useStyles = makeStyles({
+  row: {
+    display: 'flex',
+    borderBottom: '1px solid rgb(224, 224, 224)',
+    height: '60px',
+    backgroundColor: 'gainsboro',
+    fontSize: '14px',
+    fontWeight: 'bold',
+  },
+});
+
+const UsersTableHeader = ({ cols, order, orderBy, onClick }) => {
+  const classes = useStyles();
   return (
-    <TableHead>
-      <TableRow>
-        {columns.map(column => (
-          <TableCell
-            key={column.id}
-            style={{ minWidth: column.minWidth }}
-            sortDirection={orderBy === column.id ? order : false}
-          >
+    <div className={classes.row}>
+      {cols.map(column => {
+        return (
+          <UsersTableCell column={column} key={column.id}>
             <TableSortLabel
               active={orderBy === column.id}
               direction={orderBy === column.id ? order : 'asc'}
@@ -19,10 +29,10 @@ const UsersTableHeader = ({ columns, order, orderBy, onClick }) => {
             >
               {column.label}
             </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
+          </UsersTableCell>
+        );
+      })}
+    </div>
   );
 };
 

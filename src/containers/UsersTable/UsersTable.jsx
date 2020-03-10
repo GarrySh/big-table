@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { orderBy as _orderBy } from 'lodash-es';
+import { FixedSizeList as List } from 'react-window';
+import { orderBy as _orderBy, memoize as _memoize } from 'lodash-es';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Table, TableBody, TableContainer } from '@material-ui/core';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { Paper } from '@material-ui/core';
 import UsersTableHeader from './components/UsersTableHeader';
 import UsersTableRow from './components/UsersTableRow';
 
 const columns = [
-  { id: 'id', label: 'Id', minWidth: 20, canBeSorted: true },
-  { id: 'firstName', label: 'First name', minWidth: 60, canBeSorted: true },
-  { id: 'lastName', label: 'Last name', minWidth: 60, canBeSorted: true },
-  { id: 'departmentIds', label: 'Departments', minWidth: 100 },
+  { id: 'id', label: 'Id', flexBasis: 60, canBeSorted: true },
+  { id: 'firstName', label: 'First name', flexBasis: 100, canBeSorted: true },
+  { id: 'lastName', label: 'Last name', flexBasis: 100, canBeSorted: true },
+  { id: 'departmentIds', label: 'Departments', flexBasis: 400, flexGrow: 1 },
 ];
 
 const useStyles = makeStyles(theme => ({
@@ -17,9 +19,14 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     marginBottom: theme.spacing(3),
   },
-  container: {
-    maxHeight: '500px',
+  tableWrapper: {
+    height: '500px',
   },
+}));
+
+const createItemData = _memoize((rows, cols) => ({
+  rows,
+  cols,
 }));
 
 const UsersTable = ({ users }) => {
@@ -37,23 +44,38 @@ const UsersTable = ({ users }) => {
 
   const sortedUsers = _orderBy(users, [orderBy], [order]);
 
+  const Row = props => {
+    const { style, index, data } = props;
+    const { rows, cols } = data;
+    return <UsersTableRow row={rows[index]} cols={cols} style={style} />;
+  };
+
+  const itemData = createItemData(sortedUsers, columns);
+
   return (
     <Paper className={classes.root}>
-      <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label='sticky table'>
-          <UsersTableHeader
-            columns={columns}
-            order={order}
-            orderBy={orderBy}
-            onClick={handleRequestSort}
-          />
-          <TableBody>
-            {sortedUsers.map(row => (
-              <UsersTableRow key={row.id} row={row} columns={columns} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <UsersTableHeader
+        cols={columns}
+        order={order}
+        orderBy={orderBy}
+        onClick={handleRequestSort}
+      />
+      <div className={classes.tableWrapper}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              className='List'
+              height={height}
+              itemCount={itemData.rows.length}
+              itemSize={60}
+              width={width}
+              itemData={itemData}
+            >
+              {Row}
+            </List>
+          )}
+        </AutoSizer>
+      </div>
     </Paper>
   );
 };

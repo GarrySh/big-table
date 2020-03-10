@@ -17,7 +17,7 @@ const Department = ({ id }) => {
   const props = { backgroundColor: color.name };
   const classes = useStyles(props);
 
-  return <Chip label={title} className={classes.chip} />;
+  return <Chip size='small' label={title} className={classes.chip} />;
 };
 
 export default memo(Department);
