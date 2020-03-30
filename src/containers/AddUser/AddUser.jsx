@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { store, actions } from 'store';
 import { TextField } from '@material-ui/core';
@@ -27,25 +27,31 @@ const AddUser = () => {
   const [isOpen, setOpen] = useState(false);
   const [inputs, setInputs] = useState(initialState);
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     setOpen(true);
-  };
+  }, [setOpen]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, [setOpen]);
 
-  const handleInputChange = event => {
-    event.persist();
-    setInputs(formInputs => ({ ...formInputs, [event.target.name]: event.target.value }));
-  };
+  const handleInputChange = useCallback(
+    event => {
+      event.persist();
+      setInputs(formInputs => ({ ...formInputs, [event.target.name]: event.target.value }));
+    },
+    [setInputs],
+  );
 
-  const handleSave = event => {
-    event.preventDefault();
-    dispatch({ type: actions.addUser, payload: inputs });
-    setInputs(initialState);
-    setOpen(false);
-  };
+  const handleSave = useCallback(
+    event => {
+      event.preventDefault();
+      dispatch({ type: actions.addUser, payload: inputs });
+      setInputs(initialState);
+      setOpen(false);
+    },
+    [setInputs, setOpen, dispatch, initialState, inputs],
+  );
 
   return (
     <div className={classes.root}>

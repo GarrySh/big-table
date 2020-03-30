@@ -8,6 +8,7 @@ import AddUser from 'containers/AddUser';
 const UsersList = () => {
   const { state } = useContext(store);
   const { users, departments } = state;
+
   return (
     <Layout title='Список пользователей'>
       <AddUser />
