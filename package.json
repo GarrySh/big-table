@@ -15,7 +15,7 @@
     "@testing-library/react": "9.3.2",
     "@testing-library/user-event": "7.1.2",
     "faker": "4.1.0",
-    "lodash-es": "4.17.15",
+    "lodash-es": "4.17.21",
     "prop-types": "15.7.2",
     "react": "16.13.0",
     "react-dom": "16.13.0",
